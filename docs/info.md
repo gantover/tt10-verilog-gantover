@@ -18,3 +18,4 @@ You cannot test it
 ## External hardware
 
 No external hardware used
+Trigger
