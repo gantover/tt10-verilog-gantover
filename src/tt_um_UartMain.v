@@ -407,6 +407,7 @@ endmodule
 module tt_um_UartMain(
   input   clk,
   input   rst_n,
+  input   ena,
   input   io_rxd,
   output  io_txd
 );
@@ -424,4 +425,5 @@ module tt_um_UartMain(
   assign e_clock = clk;
   assign e_reset = rst_n;
   assign e_io_rxd = io_rxd; // @[Uart.scala 220:14]
+  wire _unused = &{ena, 1'b0};
 endmodule
