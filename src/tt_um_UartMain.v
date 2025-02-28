@@ -405,8 +405,8 @@ module Echo(
   assign rx_io_channel_ready = tx_io_channel_ready; // @[Uart.scala 203:17]
 endmodule
 module tt_um_UartMain(
-  input   clock,
-  input   reset,
+  input   clk,
+  input   rst_n,
   input   io_rxd,
   output  io_txd
 );
@@ -421,7 +421,7 @@ module tt_um_UartMain(
     .io_rxd(e_io_rxd)
   );
   assign io_txd = e_io_txd; // @[Uart.scala 221:12]
-  assign e_clock = clock;
-  assign e_reset = reset;
+  assign e_clock = clk;
+  assign e_reset = rst_n;
   assign e_io_rxd = io_rxd; // @[Uart.scala 220:14]
 endmodule

@@ -35,8 +35,8 @@ module tb ();
       .VPWR(VPWR),
       .VGND(VGND),
 `endif
-      .clock (clk),
-      .reset (rst_n),
+      .clk (clk),
+      .rst_n (rst_n),
       .io_rxd (ui_in[0]),
       .io_txd (uo_out[0])
       // .ui_in  (ui_in),    // Dedicated inputs
