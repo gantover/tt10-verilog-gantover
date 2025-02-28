@@ -9,3 +9,15 @@ test/sim_build
 test/__pycache__/
 test/results.xml
 test/gate_level_netlist.v
+
+*.jou
+*.cache
+*.class
+8-bit-uart-cpu/project/
+8-bit-uart-cpu/target/
+8-bit-uart-cpu/test_run_dir/
+8-bit-uart-cpu/src/fpga/fpga.runs/
+8-bit-uart-cpu/src/fpga/fpga.sim/
+8-bit-uart-cpu/src/fpga/fpga.hw/
+8-bit-uart-cpu/src/fpga/fpga.ip_user_files/
+
