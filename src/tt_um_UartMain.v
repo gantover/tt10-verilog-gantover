@@ -405,11 +405,19 @@ module Echo(
   assign rx_io_channel_ready = tx_io_channel_ready; // @[Uart.scala 203:17]
 endmodule
 module tt_um_UartMain(
-  input   clk,
-  input   rst_n,
-  input   ena,
-  input   io_rxd,
-  output  io_txd
+  input  wire [7:0] ui_in,    // dedicated inputs
+  output wire [7:0] uo_out,   // Dedicated outputs
+  input  wire [7:0] uio_in,   // IOs: Input path
+  output wire [7:0] uio_out,  // IOs: Output path
+  output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
+  input  wire       ena,      // always 1 when the design is powered, so you can ignore it
+  input  wire       clk,      // clock
+  input  wire       rst_n     // reset_n - low to reset
+  // input   clk,
+  // input   rst_n,
+  // input   ena,
+  // input   io_rxd,
+  // output  io_txd
 );
   wire  e_clock; // @[Uart.scala 219:19]
   wire  e_reset; // @[Uart.scala 219:19]
@@ -421,9 +429,10 @@ module tt_um_UartMain(
     .io_txd(e_io_txd),
     .io_rxd(e_io_rxd)
   );
-  assign io_txd = e_io_txd; // @[Uart.scala 221:12]
+  assign uo_out[0] = e_io_txd; // @[Uart.scala 221:12]
   assign e_clock = clk;
   assign e_reset = rst_n;
-  assign e_io_rxd = io_rxd; // @[Uart.scala 220:14]
+  assign e_io_rxd = ui_in[0]; // @[Uart.scala 220:14]
   wire _unused = &{ena, 1'b0};
+  wire _unused2 = &{uio_oe, uio_out, uio_in, 8'b0};
 endmodule

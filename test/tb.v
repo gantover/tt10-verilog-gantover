@@ -37,8 +37,8 @@ module tb ();
 `endif
       .clk (clk),
       .rst_n (rst_n),
-      .io_rxd (ui_in[0]),
-      .io_txd (uo_out[0])
+      .ui_in (ui_in),
+      .uo_out (uo_out)
       // .ui_in  (ui_in),    // Dedicated inputs
       // .uo_out (uo_out),   // Dedicated outputs
       // .uio_in (uio_in),   // IOs: Input path
