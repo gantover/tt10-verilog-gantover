@@ -433,6 +433,11 @@ module tt_um_UartMain(
   assign e_clock = clk;
   assign e_reset = rst_n;
   assign e_io_rxd = ui_in[0]; // @[Uart.scala 220:14]
+
   wire _unused = &{ena, 1'b0};
-  wire _unused2 = &{uio_oe, uio_out, uio_in, 8'b0};
+  wire _unused2 = &{uio_in, 8'b0};
+  assign uio_oe = 8'b0;
+  assign uio_out = 8'b0;
+  wire _unused3 = &{ui_in[7:1], 7'b0};
+  assign uo_out[7:1] = 7'b0;
 endmodule
