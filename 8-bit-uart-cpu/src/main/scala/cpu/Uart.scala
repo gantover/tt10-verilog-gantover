@@ -5,6 +5,7 @@
  *
  * A UART is a serial port, also called an RS232 interface.
  * 
+ * Was modified to incorporate XOR Cipher
  */
 
 package cpu 
@@ -12,10 +13,8 @@ package cpu
 import chisel3._
 import chisel3.util._
 
-//- start uart_channel
 class UartIO extends DecoupledIO(UInt(8.W)) {
 }
-//- end
 
 /**
   * Transmit part of the UART.
@@ -112,12 +111,10 @@ class Rx(frequency: Int, baudRate: Int) extends Module {
   io.channel.bits := shiftReg
   io.channel.valid := validReg
 }
-//- end
 
 /**
   * A single byte buffer with a ready/valid interface
   */
-//- start uart_buffer
 class Buffer extends Module {
   val io = IO(new Bundle {
     val in = Flipped(new UartIO())
@@ -143,115 +140,90 @@ class Buffer extends Module {
   }
   io.out.bits := dataReg
 }
-//- end
 
-/**
-  * A transmitter with a single buffer.
-  */
-//- start uart_buffered_tx
-class BufferedTx(frequency: Int, baudRate: Int) extends Module {
+
+class Handle(frequency: Int, baudRate: Int) extends Module {
   val io = IO(new Bundle {
     val txd = Output(UInt(1.W))
-    val channel = Flipped(new UartIO())
+    val rxd = Input(UInt(1.W))
+    val updateKey = Input(UInt(1.W))
   })
   val tx = Module(new Tx(frequency, baudRate))
-  val buf = Module(new Buffer())
-
-  buf.io.in <> io.channel
-  tx.io.channel <> buf.io.out
-  io.txd <> tx.io.txd
-}
-//- end
-
-/**
-  * Send a string.
-  */
-//- start uart_sender
-class Sender(frequency: Int, baudRate: Int) extends Module {
-  val io = IO(new Bundle {
-    val txd = Output(UInt(1.W))
-  })
-
-  val tx = Module(new BufferedTx(frequency, baudRate))
-
-  io.txd := tx.io.txd
-
-  val msg = "Hello World!"
-  val text = VecInit(msg.map(_.U))
-  val len = msg.length.U
-
-  val cntReg = RegInit(0.U(8.W))
-
-  tx.io.channel.bits := text(cntReg)
-  tx.io.channel.valid := cntReg =/= len
-
-  when(tx.io.channel.ready && cntReg =/= len) {
-    cntReg := cntReg + 1.U // filling in the sending buffer
-  }
-}
-//- end
-
-//- start uart_echo
-class Echo(frequency: Int, baudRate: Int) extends Module {
-  val io = IO(new Bundle {
-    val txd = Output(UInt(1.W))
-    val rxd = Input(UInt(1.W))
-  })
-  val tx = Module(new BufferedTx(frequency, baudRate))
   val rx = Module(new Rx(frequency, baudRate))
+  val key = RegInit("b01010101".U(8.W))
+  val updateKey = RegInit(true.B)
+  updateKey := io.updateKey
+
+  val buf = Module(new Buffer())
+  buf.io.in <> rx.io.channel
+  tx.io.channel.bits := buf.io.out.bits ^ key
+  tx.io.channel.valid := buf.io.out.valid
+  buf.io.out.ready := tx.io.channel.ready
+  
+
+  when (updateKey) {
+    when (buf.io.out.valid) {
+      buf.io.out.ready := true.B
+      key := buf.io.out.bits
+      updateKey := false.B
+    }
+  }
+
   io.txd := tx.io.txd
   rx.io.rxd := io.rxd
-  tx.io.channel <> rx.io.channel
-}
-//- end
-
-class UartMain(frequency: Int, baudRate: Int) extends Module {
-  val io = IO(new Bundle {
-    val rxd = Input(UInt(1.W))
-    val txd = Output(UInt(1.W))
-  })
-
-  val doSender = false 
-
-  if (doSender) {
-    val s = Module(new Sender(frequency, baudRate))
-    io.txd := s.io.txd
-  } else {
-    val e = Module(new Echo(frequency, baudRate))
-    e.io.rxd := io.rxd
-    io.txd := e.io.txd
-  }
-
 }
 
-class UartFifo(frequency: Int, baudRate: Int) extends Module {
-  val io = IO(new Bundle {
-    val rxd = Input(UInt(1.W))
-    val txd = Output(UInt(1.W))
-    val led_empty = Output(UInt(1.W))
-    val led_full = Output(UInt(1.W))
-  })
-  val tx = Module(new BufferedTx(frequency, baudRate))
-  val rx = Module(new Rx(frequency, baudRate))
+class tt_um_XORCipher(frequency: Int, baudRate: Int) extends RawModule {
+  val ui_in = IO(Input(UInt(8.W)))
+  val uo_out = IO(Output(UInt(8.W)))
+  val uio_in = IO(Input(UInt(8.W)))
+  val uio_out = IO(Output(UInt(8.W)))
+  val uio_oe = IO(Output(UInt(8.W)))
+  val ena = IO(Input(UInt(1.W)))
+  val clk = IO(Input(Clock()))
+  val rst_n = IO(Input(Bool()))
 
-  rx.io.rxd := io.rxd // connecting the input rx to the input of the module 
-  io.txd := tx.io.txd // connecting the tx to the output of the module
+  // handle unused signals to remove warnings
+  val _ = uio_in & ui_in & 0.U(8.W) & (ena ## 0.U(7.W))
+  uio_out := 0.U
+  uio_oe := 0.U
 
-  val rfifo = Module(new RegFifo(UInt(8.W), 4))
-  rfifo.io.enq <> rx.io.channel
-  rfifo.io.deq <> tx.io.channel
-  io.led_full := !rfifo.io.enq.ready
-  io.led_empty := !rfifo.io.deq.valid
+  // define rxd and txd for clarity
+  val rxd = Wire(UInt(1.W))
+  val txd = Wire(UInt(1.W))
+  rxd := ui_in(7)
+  uo_out := Cat(0.U(7.W), txd.asBool)
+
+  val e = withClockAndReset(clk, rst_n){ Module(new Handle(frequency, baudRate)) }
+  e.io.rxd := rxd
+  txd := e.io.txd
+  e.io.updateKey := ui_in(0)
 }
 
-object UartMain extends App {
-  val freq = 100000000 // previously 50000000
-  val baud = 9600 // 115200
-  emitVerilog(new UartMain(freq, baud), Array("--target-dir", "generated"))
+// A wrapper to only expose used hardware pins
+class Wrapper(frequency: Int, baudRate: Int) extends RawModule {
+  val rxd = IO(Input(UInt(1.W)))
+  val txd = IO(Output(UInt(1.W)))
+  val clk = IO(Input(Clock()))
+  val rst_n = IO(Input(Bool()))
+  val updateKey = IO(Input(UInt(1.W)))
+  val device = Module(new tt_um_XORCipher(frequency, baudRate))
+  device.clk := clk
+  device.rst_n := rst_n
+  device.ui_in := Cat(rxd, 0.U(6.W), updateKey)
+  device.uio_in := 0.U
+  device.ena := 0.U
+  txd := device.uo_out(0)
 }
 
-object UartFifo extends App {
-  val freq = 100000000 // previously 50000000
-  val baud = 9600 // 115200
-  emitVerilog(new UartFifo(freq, baud), Array("--target-dir", "generated"))
+object tt_um_XORCipher extends App {
+  val freq = 50000000 // 50MHz
+  val baud = 9600
+  emitVerilog(new tt_um_XORCipher(freq, baud), Array("--target-dir", "generated"))
+}
+
+object Wrapper extends App {
+  val freq = 100000000
+  val baud = 9600
+  emitVerilog(new Wrapper(freq, baud), Array("--target-dir", "generated"))
 }
