@@ -4,7 +4,7 @@
 <!-- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.                   -->
 <!-- Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.   -->
 
-<Project Product="Vivado" Version="7" Minor="68" Path="/home/damian/Documents/courses/arch/tt10-verilog-gantover/8-bit-uart-cpu/src/fpga/fpga.xpr">
+<Project Product="Vivado" Version="7" Minor="68" Path="/home/damian/Documents/courses/arch/tt10-verilog-gantover/project/src/fpga/fpga.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="f666bdb95d8f44ea9405e53fd0cc0e20"/>

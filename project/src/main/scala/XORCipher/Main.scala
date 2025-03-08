@@ -151,8 +151,10 @@ class Handle(frequency: Int, baudRate: Int) extends Module {
   val tx = Module(new Tx(frequency, baudRate))
   val rx = Module(new Rx(frequency, baudRate))
   val key = RegInit("b01010101".U(8.W))
-  val updateKey = RegInit(true.B)
-  updateKey := io.updateKey
+  val updateKey = RegInit(false.B)
+  when(io.updateKey === 1.U) {
+    updateKey := true.B
+  }
 
   val buf = Module(new Buffer())
   buf.io.in <> rx.io.channel

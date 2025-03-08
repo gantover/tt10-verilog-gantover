@@ -11,7 +11,10 @@ You can also include images in this folder and reference them in the markdown. E
 
 You send a char via a uart port (8bit data, no partity bit) and it sends an "encrypted" char back
 
-You will have to maintain an up signal on the updateKey port while sending the 8 bit char that will be used as key.
+To update the key : briefly activate a 1 signal on updateKey port, the circuit will now wait for the next input and set it as the new key once received
+
+> the activation signal for updateKey should be held down before sending the new key otherwise the circuit will stay in the updateKey state
+
 The default key is b10101010.
 
 ## How to test

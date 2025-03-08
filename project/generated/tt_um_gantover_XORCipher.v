@@ -11,43 +11,43 @@ module Tx(
   reg [31:0] _RAND_1;
   reg [31:0] _RAND_2;
 `endif // RANDOMIZE_REG_INIT
-  reg [10:0] shiftReg; // @[Uart.scala 33:25]
-  reg [19:0] cntReg; // @[Uart.scala 34:23]
-  reg [3:0] bitsReg; // @[Uart.scala 35:24]
-  wire  _io_channel_ready_T = cntReg == 20'h0; // @[Uart.scala 37:31]
-  wire [9:0] shift = shiftReg[10:1]; // @[Uart.scala 45:28]
-  wire [10:0] _shiftReg_T_1 = {1'h1,shift}; // @[Uart.scala 46:23]
-  wire [3:0] _bitsReg_T_1 = bitsReg - 4'h1; // @[Uart.scala 47:26]
-  wire [10:0] _shiftReg_T_3 = {2'h3,io_channel_bits,1'h0}; // @[Uart.scala 51:44]
-  wire [19:0] _cntReg_T_1 = cntReg - 20'h1; // @[Uart.scala 59:22]
-  assign io_txd = shiftReg[0]; // @[Uart.scala 39:21]
-  assign io_channel_ready = cntReg == 20'h0 & bitsReg == 4'h0; // @[Uart.scala 37:40]
+  reg [10:0] shiftReg; // @[Main.scala 33:25]
+  reg [19:0] cntReg; // @[Main.scala 34:23]
+  reg [3:0] bitsReg; // @[Main.scala 35:24]
+  wire  _io_channel_ready_T = cntReg == 20'h0; // @[Main.scala 37:31]
+  wire [9:0] shift = shiftReg[10:1]; // @[Main.scala 45:28]
+  wire [10:0] _shiftReg_T_1 = {1'h1,shift}; // @[Main.scala 46:23]
+  wire [3:0] _bitsReg_T_1 = bitsReg - 4'h1; // @[Main.scala 47:26]
+  wire [10:0] _shiftReg_T_3 = {2'h3,io_channel_bits,1'h0}; // @[Main.scala 51:44]
+  wire [19:0] _cntReg_T_1 = cntReg - 20'h1; // @[Main.scala 59:22]
+  assign io_txd = shiftReg[0]; // @[Main.scala 39:21]
+  assign io_channel_ready = cntReg == 20'h0 & bitsReg == 4'h0; // @[Main.scala 37:40]
   always @(posedge clock) begin
-    if (reset) begin // @[Uart.scala 33:25]
-      shiftReg <= 11'h7ff; // @[Uart.scala 33:25]
-    end else if (_io_channel_ready_T) begin // @[Uart.scala 41:24]
-      if (bitsReg != 4'h0) begin // @[Uart.scala 44:27]
-        shiftReg <= _shiftReg_T_1; // @[Uart.scala 46:16]
-      end else if (io_channel_valid) begin // @[Uart.scala 49:30]
-        shiftReg <= _shiftReg_T_3; // @[Uart.scala 51:18]
+    if (reset) begin // @[Main.scala 33:25]
+      shiftReg <= 11'h7ff; // @[Main.scala 33:25]
+    end else if (_io_channel_ready_T) begin // @[Main.scala 41:24]
+      if (bitsReg != 4'h0) begin // @[Main.scala 44:27]
+        shiftReg <= _shiftReg_T_1; // @[Main.scala 46:16]
+      end else if (io_channel_valid) begin // @[Main.scala 49:30]
+        shiftReg <= _shiftReg_T_3; // @[Main.scala 51:18]
       end else begin
-        shiftReg <= 11'h7ff; // @[Uart.scala 54:18]
+        shiftReg <= 11'h7ff; // @[Main.scala 54:18]
       end
     end
-    if (reset) begin // @[Uart.scala 34:23]
-      cntReg <= 20'h0; // @[Uart.scala 34:23]
-    end else if (_io_channel_ready_T) begin // @[Uart.scala 41:24]
-      cntReg <= 20'h1457; // @[Uart.scala 43:12]
+    if (reset) begin // @[Main.scala 34:23]
+      cntReg <= 20'h0; // @[Main.scala 34:23]
+    end else if (_io_channel_ready_T) begin // @[Main.scala 41:24]
+      cntReg <= 20'h1457; // @[Main.scala 43:12]
     end else begin
-      cntReg <= _cntReg_T_1; // @[Uart.scala 59:12]
+      cntReg <= _cntReg_T_1; // @[Main.scala 59:12]
     end
-    if (reset) begin // @[Uart.scala 35:24]
-      bitsReg <= 4'h0; // @[Uart.scala 35:24]
-    end else if (_io_channel_ready_T) begin // @[Uart.scala 41:24]
-      if (bitsReg != 4'h0) begin // @[Uart.scala 44:27]
-        bitsReg <= _bitsReg_T_1; // @[Uart.scala 47:15]
-      end else if (io_channel_valid) begin // @[Uart.scala 49:30]
-        bitsReg <= 4'hb; // @[Uart.scala 52:17]
+    if (reset) begin // @[Main.scala 35:24]
+      bitsReg <= 4'h0; // @[Main.scala 35:24]
+    end else if (_io_channel_ready_T) begin // @[Main.scala 41:24]
+      if (bitsReg != 4'h0) begin // @[Main.scala 44:27]
+        bitsReg <= _bitsReg_T_1; // @[Main.scala 47:15]
+      end else if (io_channel_valid) begin // @[Main.scala 49:30]
+        bitsReg <= 4'hb; // @[Main.scala 52:17]
       end
     end
   end
@@ -117,52 +117,52 @@ module Rx(
   reg [31:0] _RAND_4;
   reg [31:0] _RAND_5;
 `endif // RANDOMIZE_REG_INIT
-  reg  rxReg_REG; // @[Uart.scala 83:30]
-  reg  rxReg; // @[Uart.scala 83:22]
-  reg [7:0] shiftReg; // @[Uart.scala 85:25]
-  reg [19:0] cntReg; // @[Uart.scala 86:23]
-  reg [3:0] bitsReg; // @[Uart.scala 87:24]
-  reg  validReg; // @[Uart.scala 88:25]
-  wire [19:0] _cntReg_T_1 = cntReg - 20'h1; // @[Uart.scala 91:22]
-  wire [7:0] _shiftReg_T_1 = {rxReg,shiftReg[7:1]}; // @[Uart.scala 94:23]
-  wire [3:0] _bitsReg_T_1 = bitsReg - 4'h1; // @[Uart.scala 95:24]
-  wire  _GEN_0 = bitsReg == 4'h1 | validReg; // @[Uart.scala 97:27 98:16 88:25]
-  assign io_channel_valid = validReg; // @[Uart.scala 112:20]
-  assign io_channel_bits = shiftReg; // @[Uart.scala 111:19]
+  reg  rxReg_REG; // @[Main.scala 83:30]
+  reg  rxReg; // @[Main.scala 83:22]
+  reg [7:0] shiftReg; // @[Main.scala 85:25]
+  reg [19:0] cntReg; // @[Main.scala 86:23]
+  reg [3:0] bitsReg; // @[Main.scala 87:24]
+  reg  validReg; // @[Main.scala 88:25]
+  wire [19:0] _cntReg_T_1 = cntReg - 20'h1; // @[Main.scala 91:22]
+  wire [7:0] _shiftReg_T_1 = {rxReg,shiftReg[7:1]}; // @[Main.scala 94:23]
+  wire [3:0] _bitsReg_T_1 = bitsReg - 4'h1; // @[Main.scala 95:24]
+  wire  _GEN_0 = bitsReg == 4'h1 | validReg; // @[Main.scala 97:27 98:16 88:25]
+  assign io_channel_valid = validReg; // @[Main.scala 112:20]
+  assign io_channel_bits = shiftReg; // @[Main.scala 111:19]
   always @(posedge clock) begin
-    rxReg_REG <= reset | io_rxd; // @[Uart.scala 83:{30,30,30}]
-    rxReg <= reset | rxReg_REG; // @[Uart.scala 83:{22,22,22}]
-    if (reset) begin // @[Uart.scala 85:25]
-      shiftReg <= 8'h0; // @[Uart.scala 85:25]
-    end else if (!(cntReg != 20'h0)) begin // @[Uart.scala 90:24]
-      if (bitsReg != 4'h0) begin // @[Uart.scala 92:32]
-        shiftReg <= _shiftReg_T_1; // @[Uart.scala 94:14]
+    rxReg_REG <= reset | io_rxd; // @[Main.scala 83:{30,30,30}]
+    rxReg <= reset | rxReg_REG; // @[Main.scala 83:{22,22,22}]
+    if (reset) begin // @[Main.scala 85:25]
+      shiftReg <= 8'h0; // @[Main.scala 85:25]
+    end else if (!(cntReg != 20'h0)) begin // @[Main.scala 90:24]
+      if (bitsReg != 4'h0) begin // @[Main.scala 92:32]
+        shiftReg <= _shiftReg_T_1; // @[Main.scala 94:14]
       end
     end
-    if (reset) begin // @[Uart.scala 86:23]
-      cntReg <= 20'h0; // @[Uart.scala 86:23]
-    end else if (cntReg != 20'h0) begin // @[Uart.scala 90:24]
-      cntReg <= _cntReg_T_1; // @[Uart.scala 91:12]
-    end else if (bitsReg != 4'h0) begin // @[Uart.scala 92:32]
-      cntReg <= 20'h1457; // @[Uart.scala 93:12]
-    end else if (~rxReg) begin // @[Uart.scala 100:30]
-      cntReg <= 20'h1e84; // @[Uart.scala 102:12]
+    if (reset) begin // @[Main.scala 86:23]
+      cntReg <= 20'h0; // @[Main.scala 86:23]
+    end else if (cntReg != 20'h0) begin // @[Main.scala 90:24]
+      cntReg <= _cntReg_T_1; // @[Main.scala 91:12]
+    end else if (bitsReg != 4'h0) begin // @[Main.scala 92:32]
+      cntReg <= 20'h1457; // @[Main.scala 93:12]
+    end else if (~rxReg) begin // @[Main.scala 100:30]
+      cntReg <= 20'h1e84; // @[Main.scala 102:12]
     end
-    if (reset) begin // @[Uart.scala 87:24]
-      bitsReg <= 4'h0; // @[Uart.scala 87:24]
-    end else if (!(cntReg != 20'h0)) begin // @[Uart.scala 90:24]
-      if (bitsReg != 4'h0) begin // @[Uart.scala 92:32]
-        bitsReg <= _bitsReg_T_1; // @[Uart.scala 95:13]
-      end else if (~rxReg) begin // @[Uart.scala 100:30]
-        bitsReg <= 4'h8; // @[Uart.scala 103:13]
+    if (reset) begin // @[Main.scala 87:24]
+      bitsReg <= 4'h0; // @[Main.scala 87:24]
+    end else if (!(cntReg != 20'h0)) begin // @[Main.scala 90:24]
+      if (bitsReg != 4'h0) begin // @[Main.scala 92:32]
+        bitsReg <= _bitsReg_T_1; // @[Main.scala 95:13]
+      end else if (~rxReg) begin // @[Main.scala 100:30]
+        bitsReg <= 4'h8; // @[Main.scala 103:13]
       end
     end
-    if (reset) begin // @[Uart.scala 88:25]
-      validReg <= 1'h0; // @[Uart.scala 88:25]
-    end else if (validReg & io_channel_ready) begin // @[Uart.scala 106:38]
-      validReg <= 1'h0; // @[Uart.scala 107:14]
-    end else if (!(cntReg != 20'h0)) begin // @[Uart.scala 90:24]
-      if (bitsReg != 4'h0) begin // @[Uart.scala 92:32]
+    if (reset) begin // @[Main.scala 88:25]
+      validReg <= 1'h0; // @[Main.scala 88:25]
+    end else if (validReg & io_channel_ready) begin // @[Main.scala 106:38]
+      validReg <= 1'h0; // @[Main.scala 107:14]
+    end else if (!(cntReg != 20'h0)) begin // @[Main.scala 90:24]
+      if (bitsReg != 4'h0) begin // @[Main.scala 92:32]
         validReg <= _GEN_0;
       end
     end
@@ -237,26 +237,26 @@ module Buffer(
   reg [31:0] _RAND_0;
   reg [31:0] _RAND_1;
 `endif // RANDOMIZE_REG_INIT
-  reg  stateReg; // @[Uart.scala 125:25]
-  reg [7:0] dataReg; // @[Uart.scala 126:24]
-  wire  _io_in_ready_T = ~stateReg; // @[Uart.scala 128:27]
-  wire  _GEN_1 = io_in_valid | stateReg; // @[Uart.scala 132:23 134:16 125:25]
-  assign io_in_ready = ~stateReg; // @[Uart.scala 128:27]
-  assign io_out_valid = stateReg; // @[Uart.scala 129:28]
-  assign io_out_bits = dataReg; // @[Uart.scala 141:15]
+  reg  stateReg; // @[Main.scala 125:25]
+  reg [7:0] dataReg; // @[Main.scala 126:24]
+  wire  _io_in_ready_T = ~stateReg; // @[Main.scala 128:27]
+  wire  _GEN_1 = io_in_valid | stateReg; // @[Main.scala 132:23 134:16 125:25]
+  assign io_in_ready = ~stateReg; // @[Main.scala 128:27]
+  assign io_out_valid = stateReg; // @[Main.scala 129:28]
+  assign io_out_bits = dataReg; // @[Main.scala 141:15]
   always @(posedge clock) begin
-    if (reset) begin // @[Uart.scala 125:25]
-      stateReg <= 1'h0; // @[Uart.scala 125:25]
-    end else if (_io_in_ready_T) begin // @[Uart.scala 131:28]
+    if (reset) begin // @[Main.scala 125:25]
+      stateReg <= 1'h0; // @[Main.scala 125:25]
+    end else if (_io_in_ready_T) begin // @[Main.scala 131:28]
       stateReg <= _GEN_1;
-    end else if (io_out_ready) begin // @[Uart.scala 137:24]
-      stateReg <= 1'h0; // @[Uart.scala 138:16]
+    end else if (io_out_ready) begin // @[Main.scala 137:24]
+      stateReg <= 1'h0; // @[Main.scala 138:16]
     end
-    if (reset) begin // @[Uart.scala 126:24]
-      dataReg <= 8'h0; // @[Uart.scala 126:24]
-    end else if (_io_in_ready_T) begin // @[Uart.scala 131:28]
-      if (io_in_valid) begin // @[Uart.scala 132:23]
-        dataReg <= io_in_bits; // @[Uart.scala 133:15]
+    if (reset) begin // @[Main.scala 126:24]
+      dataReg <= 8'h0; // @[Main.scala 126:24]
+    end else if (_io_in_ready_T) begin // @[Main.scala 131:28]
+      if (io_in_valid) begin // @[Main.scala 132:23]
+        dataReg <= io_in_bits; // @[Main.scala 133:15]
       end
     end
   end
@@ -319,32 +319,31 @@ module Handle(
   reg [31:0] _RAND_0;
   reg [31:0] _RAND_1;
 `endif // RANDOMIZE_REG_INIT
-  wire  tx_clock; // @[Uart.scala 151:18]
-  wire  tx_reset; // @[Uart.scala 151:18]
-  wire  tx_io_txd; // @[Uart.scala 151:18]
-  wire  tx_io_channel_ready; // @[Uart.scala 151:18]
-  wire  tx_io_channel_valid; // @[Uart.scala 151:18]
-  wire [7:0] tx_io_channel_bits; // @[Uart.scala 151:18]
-  wire  rx_clock; // @[Uart.scala 152:18]
-  wire  rx_reset; // @[Uart.scala 152:18]
-  wire  rx_io_rxd; // @[Uart.scala 152:18]
-  wire  rx_io_channel_ready; // @[Uart.scala 152:18]
-  wire  rx_io_channel_valid; // @[Uart.scala 152:18]
-  wire [7:0] rx_io_channel_bits; // @[Uart.scala 152:18]
-  wire  buf__clock; // @[Uart.scala 157:19]
-  wire  buf__reset; // @[Uart.scala 157:19]
-  wire  buf__io_in_ready; // @[Uart.scala 157:19]
-  wire  buf__io_in_valid; // @[Uart.scala 157:19]
-  wire [7:0] buf__io_in_bits; // @[Uart.scala 157:19]
-  wire  buf__io_out_ready; // @[Uart.scala 157:19]
-  wire  buf__io_out_valid; // @[Uart.scala 157:19]
-  wire [7:0] buf__io_out_bits; // @[Uart.scala 157:19]
-  reg [7:0] key; // @[Uart.scala 153:20]
-  reg  updateKey; // @[Uart.scala 154:26]
-  wire  _GEN_0 = buf__io_out_valid | tx_io_channel_ready; // @[Uart.scala 161:20 165:29 166:24]
-  wire  _GEN_2 = buf__io_out_valid ? 1'h0 : io_updateKey; // @[Uart.scala 155:13 165:29 168:17]
-  wire  _GEN_5 = updateKey ? _GEN_2 : io_updateKey; // @[Uart.scala 155:13 164:20]
-  Tx tx ( // @[Uart.scala 151:18]
+  wire  tx_clock; // @[Main.scala 151:18]
+  wire  tx_reset; // @[Main.scala 151:18]
+  wire  tx_io_txd; // @[Main.scala 151:18]
+  wire  tx_io_channel_ready; // @[Main.scala 151:18]
+  wire  tx_io_channel_valid; // @[Main.scala 151:18]
+  wire [7:0] tx_io_channel_bits; // @[Main.scala 151:18]
+  wire  rx_clock; // @[Main.scala 152:18]
+  wire  rx_reset; // @[Main.scala 152:18]
+  wire  rx_io_rxd; // @[Main.scala 152:18]
+  wire  rx_io_channel_ready; // @[Main.scala 152:18]
+  wire  rx_io_channel_valid; // @[Main.scala 152:18]
+  wire [7:0] rx_io_channel_bits; // @[Main.scala 152:18]
+  wire  buf__clock; // @[Main.scala 159:19]
+  wire  buf__reset; // @[Main.scala 159:19]
+  wire  buf__io_in_ready; // @[Main.scala 159:19]
+  wire  buf__io_in_valid; // @[Main.scala 159:19]
+  wire [7:0] buf__io_in_bits; // @[Main.scala 159:19]
+  wire  buf__io_out_ready; // @[Main.scala 159:19]
+  wire  buf__io_out_valid; // @[Main.scala 159:19]
+  wire [7:0] buf__io_out_bits; // @[Main.scala 159:19]
+  reg [7:0] key; // @[Main.scala 153:20]
+  reg  updateKey; // @[Main.scala 154:26]
+  wire  _GEN_0 = io_updateKey | updateKey; // @[Main.scala 155:30 156:15 154:26]
+  wire  _GEN_1 = buf__io_out_valid | tx_io_channel_ready; // @[Main.scala 163:20 167:29 168:24]
+  Tx tx ( // @[Main.scala 151:18]
     .clock(tx_clock),
     .reset(tx_reset),
     .io_txd(tx_io_txd),
@@ -352,7 +351,7 @@ module Handle(
     .io_channel_valid(tx_io_channel_valid),
     .io_channel_bits(tx_io_channel_bits)
   );
-  Rx rx ( // @[Uart.scala 152:18]
+  Rx rx ( // @[Main.scala 152:18]
     .clock(rx_clock),
     .reset(rx_reset),
     .io_rxd(rx_io_rxd),
@@ -360,7 +359,7 @@ module Handle(
     .io_channel_valid(rx_io_channel_valid),
     .io_channel_bits(rx_io_channel_bits)
   );
-  Buffer buf_ ( // @[Uart.scala 157:19]
+  Buffer buf_ ( // @[Main.scala 159:19]
     .clock(buf__clock),
     .reset(buf__reset),
     .io_in_ready(buf__io_in_ready),
@@ -370,29 +369,39 @@ module Handle(
     .io_out_valid(buf__io_out_valid),
     .io_out_bits(buf__io_out_bits)
   );
-  assign io_txd = tx_io_txd; // @[Uart.scala 172:10]
+  assign io_txd = tx_io_txd; // @[Main.scala 174:10]
   assign tx_clock = clock;
   assign tx_reset = reset;
-  assign tx_io_channel_valid = buf__io_out_valid; // @[Uart.scala 160:23]
-  assign tx_io_channel_bits = buf__io_out_bits ^ key; // @[Uart.scala 159:41]
+  assign tx_io_channel_valid = buf__io_out_valid; // @[Main.scala 162:23]
+  assign tx_io_channel_bits = buf__io_out_bits ^ key; // @[Main.scala 161:41]
   assign rx_clock = clock;
   assign rx_reset = reset;
-  assign rx_io_rxd = io_rxd; // @[Uart.scala 173:13]
-  assign rx_io_channel_ready = buf__io_in_ready; // @[Uart.scala 158:13]
+  assign rx_io_rxd = io_rxd; // @[Main.scala 175:13]
+  assign rx_io_channel_ready = buf__io_in_ready; // @[Main.scala 160:13]
   assign buf__clock = clock;
   assign buf__reset = reset;
-  assign buf__io_in_valid = rx_io_channel_valid; // @[Uart.scala 158:13]
-  assign buf__io_in_bits = rx_io_channel_bits; // @[Uart.scala 158:13]
-  assign buf__io_out_ready = updateKey ? _GEN_0 : tx_io_channel_ready; // @[Uart.scala 161:20 164:20]
+  assign buf__io_in_valid = rx_io_channel_valid; // @[Main.scala 160:13]
+  assign buf__io_in_bits = rx_io_channel_bits; // @[Main.scala 160:13]
+  assign buf__io_out_ready = updateKey ? _GEN_1 : tx_io_channel_ready; // @[Main.scala 163:20 166:20]
   always @(posedge clock) begin
-    if (reset) begin // @[Uart.scala 153:20]
-      key <= 8'h55; // @[Uart.scala 153:20]
-    end else if (updateKey) begin // @[Uart.scala 164:20]
-      if (buf__io_out_valid) begin // @[Uart.scala 165:29]
-        key <= buf__io_out_bits; // @[Uart.scala 167:11]
+    if (reset) begin // @[Main.scala 153:20]
+      key <= 8'h55; // @[Main.scala 153:20]
+    end else if (updateKey) begin // @[Main.scala 166:20]
+      if (buf__io_out_valid) begin // @[Main.scala 167:29]
+        key <= buf__io_out_bits; // @[Main.scala 169:11]
       end
     end
-    updateKey <= reset | _GEN_5; // @[Uart.scala 154:{26,26}]
+    if (reset) begin // @[Main.scala 154:26]
+      updateKey <= 1'h0; // @[Main.scala 154:26]
+    end else if (updateKey) begin // @[Main.scala 166:20]
+      if (buf__io_out_valid) begin // @[Main.scala 167:29]
+        updateKey <= 1'h0; // @[Main.scala 170:17]
+      end else begin
+        updateKey <= _GEN_0;
+      end
+    end else begin
+      updateKey <= _GEN_0;
+    end
   end
 // Register and memory initialization
 `ifdef RANDOMIZE_GARBAGE_ASSIGN
@@ -452,13 +461,13 @@ module tt_um_gantover_XORCipher(
   input        clk,
   input        rst_n
 );
-  wire  e_clock; // @[Uart.scala 197:48]
-  wire  e_reset; // @[Uart.scala 197:48]
-  wire  e_io_txd; // @[Uart.scala 197:48]
-  wire  e_io_rxd; // @[Uart.scala 197:48]
-  wire  e_io_updateKey; // @[Uart.scala 197:48]
-  wire  txd = e_io_txd; // @[Uart.scala 193:17 199:7]
-  Handle e ( // @[Uart.scala 197:48]
+  wire  e_clock; // @[Main.scala 199:48]
+  wire  e_reset; // @[Main.scala 199:48]
+  wire  e_io_txd; // @[Main.scala 199:48]
+  wire  e_io_rxd; // @[Main.scala 199:48]
+  wire  e_io_updateKey; // @[Main.scala 199:48]
+  wire  txd = e_io_txd; // @[Main.scala 195:17 201:7]
+  Handle e ( // @[Main.scala 199:48]
     .clock(e_clock),
     .reset(e_reset),
     .io_txd(e_io_txd),
@@ -466,10 +475,10 @@ module tt_um_gantover_XORCipher(
     .io_updateKey(e_io_updateKey)
   );
   assign uo_out = {7'h0,txd}; // @[Cat.scala 31:58]
-  assign uio_out = 8'h0; // @[Uart.scala 188:11]
-  assign uio_oe = 8'h0; // @[Uart.scala 189:10]
+  assign uio_out = 8'h0; // @[Main.scala 190:11]
+  assign uio_oe = 8'h0; // @[Main.scala 191:10]
   assign e_clock = clk;
   assign e_reset = rst_n;
-  assign e_io_rxd = ui_in[7]; // @[Uart.scala 194:15]
-  assign e_io_updateKey = ui_in[0]; // @[Uart.scala 200:26]
+  assign e_io_rxd = ui_in[7]; // @[Main.scala 196:15]
+  assign e_io_updateKey = ui_in[0]; // @[Main.scala 202:26]
 endmodule
