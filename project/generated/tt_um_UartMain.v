@@ -451,7 +451,7 @@ end // initial
 `endif
 `endif // SYNTHESIS
 endmodule
-module tt_um_gantover_XORCipher(
+module tt_um_UartMain(
   input  [7:0] ui_in,
   output [7:0] uo_out,
   input  [7:0] uio_in,

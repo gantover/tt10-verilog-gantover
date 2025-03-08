@@ -1,4 +1,4 @@
-circuit tt_um_gantover_XORCipher :
+circuit tt_um_UartMain :
   module Tx :
     input clock : Clock
     input reset : Reset
@@ -146,7 +146,7 @@ circuit tt_um_gantover_XORCipher :
     io.txd <= tx.io.txd @[Main.scala 174:10]
     rx.io.rxd <= io.rxd @[Main.scala 175:13]
 
-  module tt_um_gantover_XORCipher :
+  module tt_um_UartMain :
     input ui_in : UInt<8>
     output uo_out : UInt<8>
     input uio_in : UInt<8>

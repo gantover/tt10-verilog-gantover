@@ -175,7 +175,7 @@ class Handle(frequency: Int, baudRate: Int) extends Module {
   rx.io.rxd := io.rxd
 }
 
-class tt_um_gantover_XORCipher(frequency: Int, baudRate: Int) extends RawModule {
+class tt_um_UartMain(frequency: Int, baudRate: Int) extends RawModule {
   val ui_in = IO(Input(UInt(8.W)))
   val uo_out = IO(Output(UInt(8.W)))
   val uio_in = IO(Input(UInt(8.W)))
@@ -209,7 +209,7 @@ class Wrapper(frequency: Int, baudRate: Int) extends RawModule {
   val clk = IO(Input(Clock()))
   val rst_n = IO(Input(Bool()))
   val updateKey = IO(Input(UInt(1.W)))
-  val device = Module(new tt_um_gantover_XORCipher(frequency, baudRate))
+  val device = Module(new tt_um_UartMain(frequency, baudRate))
   device.clk := clk
   device.rst_n := rst_n
   device.ui_in := Cat(rxd, 0.U(6.W), updateKey)
@@ -218,10 +218,10 @@ class Wrapper(frequency: Int, baudRate: Int) extends RawModule {
   txd := device.uo_out(0)
 }
 
-object tt_um_gantover_XORCipher extends App {
+object tt_um_UartMain extends App {
   val freq = 50000000 // 50MHz
   val baud = 9600
-  emitVerilog(new tt_um_gantover_XORCipher(freq, baud), Array("--target-dir", "generated"))
+  emitVerilog(new tt_um_UartMain(freq, baud), Array("--target-dir", "generated"))
 }
 
 object Wrapper extends App {
