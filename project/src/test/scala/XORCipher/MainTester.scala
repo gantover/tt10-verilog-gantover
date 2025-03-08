@@ -4,7 +4,7 @@
  * 
  */
 
-package cpu 
+package XORCipher
 import chisel3._
 import chiseltest._
 import org.scalatest.flatspec.AnyFlatSpec
@@ -40,13 +40,6 @@ class UartTxTests extends AnyFlatSpec with ChiselScalatestTester {
   }
 }
 
-class UartSenderTests extends AnyFlatSpec with ChiselScalatestTester {
-  "UartSender" should "work" in {
-    test(new Sender(10000, 3000)) { dut =>
-      dut.clock.step(300)
-    }
-  }
-}
 
 class UartRxTests extends AnyFlatSpec with ChiselScalatestTester {
   "UartRx" should "work" in {

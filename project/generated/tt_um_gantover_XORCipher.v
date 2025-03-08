@@ -442,7 +442,7 @@ end // initial
 `endif
 `endif // SYNTHESIS
 endmodule
-module tt_um_XORCipher(
+module tt_um_gantover_XORCipher(
   input  [7:0] ui_in,
   output [7:0] uo_out,
   input  [7:0] uio_in,
@@ -465,9 +465,6 @@ module tt_um_XORCipher(
     .io_rxd(e_io_rxd),
     .io_updateKey(e_io_updateKey)
   );
-  wire _unused = &{ena, 1'b0};
-  wire _unused2 = &{uio_in, ui_in, 8'b0};
-
   assign uo_out = {7'h0,txd}; // @[Cat.scala 31:58]
   assign uio_out = 8'h0; // @[Uart.scala 188:11]
   assign uio_oe = 8'h0; // @[Uart.scala 189:10]
